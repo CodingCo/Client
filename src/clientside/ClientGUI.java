@@ -4,7 +4,7 @@ import java.awt.PopupMenu;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
-public class ClientGUI extends javax.swing.JFrame implements IFlistener {
+public class ClientGUI extends javax.swing.JFrame implements ViewListener {
 
     //== Field
     private ClientSide client;

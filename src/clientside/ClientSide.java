@@ -1,106 +1,67 @@
 package clientside;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 
 /**
  *
- * @author simon
+ * @author Awesomeness
  */
-public class ClientSide implements Runnable {
+public class ClientSide implements SocketListener {
 
-    private Socket clientSocket;
-    private ArrayList<IFlistener> observers;
-    private BufferedReader in;
-    private PrintWriter out;
+    // --
     private String userName;
-    private int connectionAttempts;
-    private boolean listen;
+    // --
+    private SocketIF con;
+    private ArrayList<ViewListener> observers;
     private boolean connected;
 
-    // Constructor
     public ClientSide() {
+        this.con = new SocketClass();
         this.observers = new ArrayList<>();
-        this.connectionAttempts = 0;
-        this.listen = true;
-        this.connected = false;
+        setConnected(false);
     }
 
-    // Methods
-    public void openStreams() throws IOException {              // Opens the input and output streams (opens tunnel)
-        this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        this.out = new PrintWriter(clientSocket.getOutputStream(), true); // true -> autoFlush
+    // Constructor for testing
+    public ClientSide(SocketIF mock) {
+        this.con = mock;
+        this.observers = new ArrayList<>();
+        setConnected(false);
     }
 
-    public void closeStreams() throws IOException {
-        this.in.close();
-        this.out.close();
-    }
-
-    public void connect(String msg, String name) {              // Connects to the server
+    //Methods
+    public void connect(String msg, String name) {
         try {
-            this.userName = name;
-            this.clientSocket = new Socket(InetAddress.getLocalHost(), 9090);
-            openStreams();
+            con.connect();
             sendMessage(msg);
-            new Thread(new ClientSide()).start();
-        } catch (IOException e) {
-        }
-
-    }
-
-    public void sendMessage(String msg) {                       // Sends message to server
-        out.print(msg);
-    }
-
-    public void closeConnection() {
-        try {
-            closeStreams();
-            clientSocket.close();
-            listen = false;
-            connectionAttempts = 0;
-            notifyObservers("Connection closed");
+            this.userName = name;
         } catch (IOException ex) {
         }
     }
 
+    public void sendMessage(String msg) {
+        con.send(msg);
+    }
+
     public void analyzeServerCommands(String cmd) {
-        if (cmd.equals("CLOSE#") && connectionAttempts == 0) {
+
+        if (cmd.equals("CLOSE#")) {
+            setConnected(false);
             closeConnection();
-            notifyObservers("Conenction rejected");
-        } else if (cmd.equals("CLOSE#")) {
-            closeConnection();
-            connected = false;
-            connectionAttempts = 0;
-            notifyObservers("Connection closed");
-        } else if (cmd.startsWith("ONLINE#") && connectionAttempts == 0) {
-            connected = true;
-            ++connectionAttempts;
-            notifyObservers(cmd);
         } else if (cmd.startsWith("ONLINE#")) {
+            setConnected(true);
             notifyObservers(cmd);
         } else if (cmd.startsWith("MESSAGE#")) {
             notifyObservers(cmd);
         }
+
     }
 
-    // Observer pattern solutions
-    public void registerObserver(IFlistener obs) {
-        observers.add(obs);
-    }
-
-    public void unRegisterObserver(IFlistener obs) {
-        observers.remove(obs);
-    }
-
-    public void notifyObservers(String msg) {
-        for (IFlistener obs : observers) {
-            obs.messageArrived(msg); // <- String
+    public void closeConnection() {
+        try {
+            con.close();
+            notifyObservers("Connection closed.");
+        } catch (IOException ex) {
         }
     }
 
@@ -108,19 +69,28 @@ public class ClientSide implements Runnable {
         return connected;
     }
 
-    // Thread method --> Listens for input from server!
-    @Override
-    public void run() {
-        String response;
+    private void setConnected(boolean status) {
+        connected = status;
+    }
 
-        try {
-            while (listen) {
-                response = in.readLine();                       // Blocking call
-                analyzeServerCommands(response);
-            }
-        } catch (IOException e) {
+    // Observer pattern solutions
+    public void registerObserver(ViewListener obs) {
+        observers.add(obs);
+    }
+
+    public void unRegisterObserver(ViewListener obs) {
+        observers.remove(obs);
+    }
+
+    public void notifyObservers(String msg) {
+        for (ViewListener obs : observers) {
+            obs.messageArrived(msg); // <- String
         }
+    }
 
+    @Override
+    public void messageArrived(String data) {
+        analyzeServerCommands(data);
     }
 
 }
