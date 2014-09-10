@@ -1,12 +1,16 @@
 package clientside;
 
-public class ClientGUI extends javax.swing.JFrame implements IFlistener {
+import javax.swing.JOptionPane;
 
-    /**
-     * Creates new form ClientGUI
-     */
+public class ClientGUI extends javax.swing.JFrame implements IFlistener {
+    
+    //== Field
+    private ClientSide client;
+    
+    //== Construcor
     public ClientGUI() {
         initComponents();
+        client = new ClientSide();
     }
 
     /**
@@ -19,44 +23,28 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabelipAddress = new javax.swing.JLabel();
-        jLabelPort = new javax.swing.JLabel();
-        jTextFieldipAddressInput = new javax.swing.JTextField();
-        jTextFieldPortInput = new javax.swing.JTextField();
-        jButtonConnect = new javax.swing.JButton();
-        jTextFieldNameInput = new javax.swing.JTextField();
-        jLabelName = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaChatBox = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextAreaMessageArea = new javax.swing.JTextArea();
+        jTextAreaMessageInput = new javax.swing.JTextArea();
         jButtonSend = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabelipAddress.setText("ipAddress: ");
-
-        jLabelPort.setText("Port");
-
-        jTextFieldPortInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldPortInputActionPerformed(evt);
-            }
-        });
-
-        jButtonConnect.setText("Connect");
-
-        jLabelName.setText("Name:");
 
         jTextAreaChatBox.setColumns(20);
         jTextAreaChatBox.setRows(5);
         jScrollPane1.setViewportView(jTextAreaChatBox);
 
-        jTextAreaMessageArea.setColumns(20);
-        jTextAreaMessageArea.setRows(5);
-        jScrollPane2.setViewportView(jTextAreaMessageArea);
+        jTextAreaMessageInput.setColumns(20);
+        jTextAreaMessageInput.setRows(5);
+        jScrollPane2.setViewportView(jTextAreaMessageInput);
 
         jButtonSend.setText("Send");
+        jButtonSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSendActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -68,38 +56,15 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonSend, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabelName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldNameInput)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabelipAddress)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldipAddressInput, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jLabelPort)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldPortInput, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jButtonConnect)
-                .addGap(30, 30, 30))
+                        .addComponent(jButtonSend, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(20, 20, 20))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelipAddress)
-                    .addComponent(jLabelPort)
-                    .addComponent(jTextFieldipAddressInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldPortInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonConnect)
-                    .addComponent(jTextFieldNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelName))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
@@ -111,7 +76,7 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,14 +86,51 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldPortInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPortInputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldPortInputActionPerformed
+    private String extractCommand(String msg){
+        String parts[] = msg.split("#");
+        if(msg.contains("#") && !msg.isEmpty()){
+            if(parts[0].equalsIgnoreCase("CONNECT") 
+                    || parts[0].equalsIgnoreCase("SEND") 
+                    || parts[0].equalsIgnoreCase("CLOSE")){
+                return parts[0].toUpperCase();
+            }
+        } 
+        return "";
+        
+    }
+    private String extractName(String msg){
+        String parts[] = msg.split("#");
+        if(parts.length > 1){
+            return parts[1];
+        } 
+        return "";
+    }
+    
+    //== Commands from the client to the server (CONNECT#NAME)(SEND#NAME#MESSAGE)(CLOSE#)
+    private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
+        String message = jTextAreaMessageInput.getText().trim();
+        String command = extractCommand(message);
+        System.out.println(message);
+        System.out.println(command);
+           switch(command){
+               case "CONNECT":
+                   client.connect(message,extractName(message));
+                   break;
+               case "SEND":
+                   client.sendMessage(message);
+                   break;
+               case "CLOSE":
+                   client.closeConnection();
+                   break;
+               default:
+                   JOptionPane.showMessageDialog(this, "Invalid input-command. Please re-enter.", "Wrong input!", JOptionPane.ERROR_MESSAGE);
+           }
+    }//GEN-LAST:event_jButtonSendActionPerformed
 
-    // Own methods -----------------------------
+    
     @Override
     public void messageArrived(String msg) {
-        
+        this.jTextAreaChatBox.setText(this.jTextAreaChatBox.getText() + "\n" + msg);
     }
     
 
@@ -168,19 +170,12 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonConnect;
     private javax.swing.JButton jButtonSend;
-    private javax.swing.JLabel jLabelName;
-    private javax.swing.JLabel jLabelPort;
-    private javax.swing.JLabel jLabelipAddress;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaChatBox;
-    private javax.swing.JTextArea jTextAreaMessageArea;
-    private javax.swing.JTextField jTextFieldNameInput;
-    private javax.swing.JTextField jTextFieldPortInput;
-    private javax.swing.JTextField jTextFieldipAddressInput;
+    private javax.swing.JTextArea jTextAreaMessageInput;
     // End of variables declaration//GEN-END:variables
 
 }

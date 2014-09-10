@@ -23,7 +23,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
+          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -44,44 +44,19 @@
                       <Group type="102" attributes="0">
                           <Component id="jScrollPane2" min="-2" pref="225" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jButtonSend" pref="91" max="32767" attributes="0"/>
+                          <Component id="jButtonSend" pref="99" max="32767" attributes="0"/>
                       </Group>
                       <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="jLabelName" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldNameInput" max="32767" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="jLabelipAddress" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldipAddressInput" min="-2" pref="106" max="-2" attributes="0"/>
-                      </Group>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="jLabelPort" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jTextFieldPortInput" min="-2" pref="65" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                  <Component id="jButtonConnect" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabelipAddress" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelPort" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextFieldipAddressInput" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextFieldPortInput" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButtonConnect" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextFieldNameInput" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelName" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" min="-2" pref="249" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" min="-2" pref="271" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jScrollPane2" pref="92" max="32767" attributes="0"/>
@@ -93,35 +68,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabelipAddress">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="ipAddress: "/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabelPort">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Port"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldipAddressInput">
-        </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldPortInput">
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldPortInputActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButtonConnect">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Connect"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldNameInput">
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabelName">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Name:"/>
-          </Properties>
-        </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -144,7 +90,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTextArea" name="jTextAreaMessageArea">
+            <Component class="javax.swing.JTextArea" name="jTextAreaMessageInput">
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
@@ -156,6 +102,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Send"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSendActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
