@@ -1,16 +1,22 @@
 package clientside;
 
+import java.awt.PopupMenu;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 public class ClientGUI extends javax.swing.JFrame implements IFlistener {
-    
+
     //== Field
     private ClientSide client;
-    
+    private DefaultListModel model;
+
     //== Construcor
     public ClientGUI() {
         initComponents();
         client = new ClientSide();
+        model = new DefaultListModel();
+        User user = new User("aælksd"); //== friggin' test
+        model.addElement(user);
     }
 
     /**
@@ -28,6 +34,11 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaMessageInput = new javax.swing.JTextArea();
         jButtonSend = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButtonConnect = new javax.swing.JButton();
+        jButtonClose = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jListOnlineUsers = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -37,6 +48,11 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
 
         jTextAreaMessageInput.setColumns(20);
         jTextAreaMessageInput.setRows(5);
+        jTextAreaMessageInput.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextAreaMessageInputKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTextAreaMessageInput);
 
         jButtonSend.setText("Send");
@@ -54,85 +70,112 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonSend, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addComponent(jButtonSend, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addGap(20, 20, 20))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                    .addComponent(jButtonSend, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(jButtonSend))
         );
+
+        jLabel1.setText("Online users: ");
+
+        jButtonConnect.setText("Connect");
+        jButtonConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConnectActionPerformed(evt);
+            }
+        });
+
+        jButtonClose.setText("Close Chat");
+        jButtonClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCloseActionPerformed(evt);
+            }
+        });
+
+        jListOnlineUsers.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(jListOnlineUsers);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonConnect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonClose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonClose)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 14, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private String extractCommand(String msg){
-        String parts[] = msg.split("#");
-        if(msg.contains("#") && !msg.isEmpty()){
-            if(parts[0].equalsIgnoreCase("CONNECT") 
-                    || parts[0].equalsIgnoreCase("SEND") 
-                    || parts[0].equalsIgnoreCase("CLOSE")){
-                return parts[0].toUpperCase();
-            }
-        } 
-        return "";
-        
-    }
-    private String extractName(String msg){
-        String parts[] = msg.split("#");
-        if(parts.length > 1){
-            return parts[1];
-        } 
-        return "";
-    }
-    
     //== Commands from the client to the server (CONNECT#NAME)(SEND#NAME#MESSAGE)(CLOSE#)
     private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
-        String message = jTextAreaMessageInput.getText().trim();
-        String command = extractCommand(message);
-        System.out.println(message);
-        System.out.println(command);
-           switch(command){
-               case "CONNECT":
-                   client.connect(message,extractName(message));
-                   break;
-               case "SEND":
-                   client.sendMessage(message);
-                   break;
-               case "CLOSE":
-                   client.closeConnection();
-                   break;
-               default:
-                   JOptionPane.showMessageDialog(this, "Invalid input-command. Please re-enter.", "Wrong input!", JOptionPane.ERROR_MESSAGE);
-           }
+//        String message = jTextAreaMessageInput.getText();
+//        client.sendMessage("SEND#" + message);
+      // should contain logic to differ between sending to all, sending to a group and sending to a particular person 
     }//GEN-LAST:event_jButtonSendActionPerformed
 
-    
+    private void jButtonConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConnectActionPerformed
+        String message = jTextAreaMessageInput.getText();
+        client.connect("CONNECT#" + message, message);
+    }//GEN-LAST:event_jButtonConnectActionPerformed
+
+    private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
+        client.closeConnection();
+    }//GEN-LAST:event_jButtonCloseActionPerformed
+
+    //== If enter was hit
+    private void jTextAreaMessageInputKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaMessageInputKeyTyped
+        if (evt.getKeyChar() == '\n'){
+            String message = jTextAreaMessageInput.getText();
+            client.sendMessage(message);
+        }
+            
+    }//GEN-LAST:event_jTextAreaMessageInputKeyTyped
+
     @Override
     public void messageArrived(String msg) {
         this.jTextAreaChatBox.setText(this.jTextAreaChatBox.getText() + "\n" + msg);
     }
-    
 
     /**
      * @param args the command line arguments
@@ -170,10 +213,15 @@ public class ClientGUI extends javax.swing.JFrame implements IFlistener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonClose;
+    private javax.swing.JButton jButtonConnect;
     private javax.swing.JButton jButtonSend;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JList jListOnlineUsers;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextAreaChatBox;
     private javax.swing.JTextArea jTextAreaMessageInput;
     // End of variables declaration//GEN-END:variables
