@@ -43,4 +43,11 @@ public class ClientTest {
     //
     // @Test
     // public void hello() {}
+
+    @Test
+    public void connect(String msg, String name){
+        
+    }
+
+
 }
