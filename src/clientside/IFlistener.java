@@ -6,6 +6,6 @@ package clientside;
  */
 public interface IFlistener {
 
-    public void notifyListeners();
+    public void messageArrived(String msg);
     
 }
