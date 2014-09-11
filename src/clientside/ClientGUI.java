@@ -1,8 +1,11 @@
 package clientside;
 
-import java.awt.PopupMenu;
+import java.awt.Font;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 public class ClientGUI extends javax.swing.JFrame implements ViewListener {
 
@@ -15,8 +18,9 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         initComponents();
         client = new ClientSide();
         model = new DefaultListModel();
-        User user = new User("aælksd"); //== friggin' test
-        model.addElement(user);
+        jListOnlineUsers.setModel(model);
+
+        manageEnabledButtons();
     }
 
     /**
@@ -35,18 +39,25 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         jTextAreaMessageInput = new javax.swing.JTextArea();
         jButtonSend = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButtonConnect = new javax.swing.JButton();
         jButtonClose = new javax.swing.JButton();
+        jButtonConnect = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         jListOnlineUsers = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel1MouseClicked(evt);
+            }
+        });
 
         jTextAreaChatBox.setColumns(20);
         jTextAreaChatBox.setRows(5);
         jScrollPane1.setViewportView(jTextAreaChatBox);
 
         jTextAreaMessageInput.setColumns(20);
+        jTextAreaMessageInput.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
         jTextAreaMessageInput.setRows(5);
         jTextAreaMessageInput.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -55,6 +66,7 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         });
         jScrollPane2.setViewportView(jTextAreaMessageInput);
 
+        jButtonSend.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonSend.setText("Send");
         jButtonSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -62,44 +74,22 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonSend, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
-                .addGap(20, 20, 20))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(jButtonSend))
-        );
-
+        jLabel1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel1.setText("Online users: ");
 
-        jButtonConnect.setText("Connect");
-        jButtonConnect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonConnectActionPerformed(evt);
-            }
-        });
-
+        jButtonClose.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonClose.setText("Close Chat");
         jButtonClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCloseActionPerformed(evt);
+            }
+        });
+
+        jButtonConnect.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jButtonConnect.setText("Connect");
+        jButtonConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConnectActionPerformed(evt);
             }
         });
 
@@ -110,71 +100,197 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         });
         jScrollPane4.setViewportView(jListOnlineUsers);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonSend, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jButtonClose, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonConnect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonClose)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonSend))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonConnect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonClose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonClose)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 14, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 15, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void generateErrorMessage(String message) {
+        UIManager.put("OptionPane.messageFont", new FontUIResource(
+                new Font("Tahoma", Font.BOLD, 18)));
+        JOptionPane.showMessageDialog(null, message);
+    }
+
+    private String generateInputMessage(String message) {
+        String input;
+        UIManager.put("OptionPane.messageFont", new FontUIResource(
+                new Font("Tahoma", Font.BOLD, 18)));
+        input = JOptionPane.showInputDialog(message);
+        if (input == null)
+            return "";
+        else if (!input.isEmpty())
+            return input;
+        else
+            generateErrorMessage("Not valid input, please re-enter");
+        return generateInputMessage(message);
+    }
+
+    private void manageEnabledButtons() {
+        jTextAreaChatBox.setEditable(false);
+        jTextAreaChatBox.setEnabled(client.isConnected());
+        jTextAreaMessageInput.setEnabled(client.isConnected());
+        jListOnlineUsers.setEnabled(client.isConnected());
+        jButtonSend.setEnabled(client.isConnected());
+        jButtonConnect.setEnabled(!client.isConnected());
+        jButtonClose.setEnabled(client.isConnected());
+    }
+
     //== Commands from the client to the server (CONNECT#NAME)(SEND#NAME#MESSAGE)(CLOSE#)
     private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
-//        String message = jTextAreaMessageInput.getText();
-//        client.sendMessage("SEND#" + message);
-      // should contain logic to differ between sending to all, sending to a group and sending to a particular person 
+        if (!jTextAreaMessageInput.getText().isEmpty()) {
+            String message = jTextAreaMessageInput.getText();
+            client.sendMessage(generateSendCommand(message));
+        } else {
+            generateErrorMessage("You can't send an empty message");
+        }
     }//GEN-LAST:event_jButtonSendActionPerformed
 
+    private String generateSendCommand(String message) {
+        String command = "SEND#";
+        if (jListOnlineUsers.isSelectionEmpty()) {                                //== Sending to all users
+            command += "*#" + message;
+        } else if (jListOnlineUsers.getSelectedIndices().length == 1) {           //== Sending to one user
+            command += jListOnlineUsers.getSelectedValue() + "#" + message;
+        } else {                                                                   //== Sending to a group of users
+            int index = 0;
+            for (Object user : jListOnlineUsers.getSelectedValuesList()) {
+                if (index > 0) {
+                    command += ",";
+                }
+                command += user;
+                index++;
+            }
+            command += "#" + message;
+        }
+        return command;
+    }
+
     private void jButtonConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConnectActionPerformed
-        String message = jTextAreaMessageInput.getText();
-        client.connect("CONNECT#" + message, message);
+        String name = generateInputMessage("Type your name and press OK");
+        if (!name.isEmpty())
+            client.connect("CONNECT#" + name, name);
+        manageEnabledButtons();
     }//GEN-LAST:event_jButtonConnectActionPerformed
 
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
         client.closeConnection();
+        manageEnabledButtons();
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
-    //== If enter was hit
+    //== If enter was hit. Enables Send-button
     private void jTextAreaMessageInputKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaMessageInputKeyTyped
-        if (evt.getKeyChar() == '\n'){
+        if (evt.getKeyChar() == '\n') {
             String message = jTextAreaMessageInput.getText();
             client.sendMessage(message);
         }
-            
+        if (!jTextAreaMessageInput.getText().isEmpty())
+            jButtonSend.setEnabled(true);
+        else
+            jButtonSend.setEnabled(false);
     }//GEN-LAST:event_jTextAreaMessageInputKeyTyped
 
+    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
+        jListOnlineUsers.clearSelection();
+    }//GEN-LAST:event_jPanel1MouseClicked
+
+    private String obtainMessage(String message) {
+        int sharps = 0;
+        String chatMessage = "";
+        for (Character character : message.toCharArray()) {
+            if (sharps >= 2) {
+                chatMessage += character;
+            }
+            if (character == '#') {
+                sharps++;
+            }
+        }
+        return chatMessage;
+    }
+
+    private void updateOnlineUsersList(String message) {
+        int sharps = 0;                                                           
+        String userString = "";
+        for (Character character : message.toCharArray()) {                       //== "CUTS" "ONLINE#" AWAY. ALLOWS "#" IN USERNAMES
+            if (sharps >= 1) {
+                userString += character;
+            }
+            if (character == '#') {
+                sharps++;
+            }
+        }
+
+        String[] names = userString.split(",");                                   //== SEPARATES ALL THE USERS
+        ArrayList<User> onlineUsers = new ArrayList<>();
+        for (String name : names)
+            onlineUsers.add(new User(name));
+
+        model.clear();                                                            //== CLEARS AND REFILLS THE LIST
+        for (User user : onlineUsers)
+            model.addElement(user);
+    }
+
     @Override
-    public void messageArrived(String msg) {
-        this.jTextAreaChatBox.setText(this.jTextAreaChatBox.getText() + "\n" + msg);
+    public void messageArrived(String message) {
+        if (message.startsWith("MESSAGE#")) {                                     //== WHEN A "MESSAGE#" COMMAND HAS ARRIVED
+            jTextAreaChatBox.append("\n" + obtainMessage(message));
+        } else if (message.startsWith("ONLINE#")) {                               //== WHEN A "ONLINE#" COMMAND HAS ARRIVED
+            updateOnlineUsersList(message);
+        } else {                                                                  //== ELSE, IT IS A CLOSE-MESSAGE 
+            jTextAreaChatBox.append("\n" + message);
+        }
     }
 
     /**
