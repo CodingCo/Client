@@ -59,7 +59,7 @@ public class TestServer {
                 while (true) {
                     String response = in.readLine();
                     System.out.println("Message from client: " + response);
-                    Thread.sleep(4000);
+                    Thread.sleep(3000);
                     out.println("ONLINE#Lars,Ole,Peter");
                 }
 

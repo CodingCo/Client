@@ -89,8 +89,9 @@ public class SocketClass implements Runnable, SocketIF {
 
         try {
             while (keepListening) {
+                System.out.println("I'm in the listening thread.");
                 response = in.readLine();
-                System.out.println("Did I ever recieve anything? : " + response); // Temp
+                System.out.println("Message from server : " + response); // Temp
                 notifyListeners(response);
             }
         } catch (IOException e) {
