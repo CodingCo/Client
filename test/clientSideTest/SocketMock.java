@@ -1,27 +1,34 @@
-package clientside;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
+package clientSideTest;
+
+import clientside.SocketIF;
+import clientside.SocketListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  *
- * @author Awesomeness
+ * @author ThomasHedegaard
  */
-public class SocketClass implements Runnable, SocketIF {
-
+public class SocketMock implements SocketIF, Runnable{
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
     private ArrayList<SocketListener> listeners;
-    private boolean keepListening;
+    private boolean keepRunning;
 
     // Constructor
-    public SocketClass() {
+    public SocketMock() {
     }
 
     // Methods
@@ -44,14 +51,14 @@ public class SocketClass implements Runnable, SocketIF {
 
     @Override
     public void send(String data) {
-        out.println(data); 
+        out.print(data); 
     }
 
     @Override
     public void close() throws IOException {
         socket.close();
         closeResources();
-        keepListening = false;
+        keepRunning = false;
     }
 
     @Override
@@ -75,15 +82,14 @@ public class SocketClass implements Runnable, SocketIF {
     @Override
     public void run() {
         String response;
+
         try {
-            while (keepListening) {
+            while (keepRunning) {
                 response = in.readLine();
-                System.out.println("Message arrived!");
                 notifyListeners(response);
             }
         } catch (IOException e) {
         }
 
     }
-
 }

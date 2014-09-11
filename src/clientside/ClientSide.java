@@ -22,13 +22,6 @@ public class ClientSide implements SocketListener {
         setConnected(false);
     }
 
-    // Constructor for testing
-    public ClientSide(SocketIF mock) {
-        this.con = mock;
-        this.observers = new ArrayList<>();
-        setConnected(false);
-    }
-
     //Methods
     public void connect(String msg, String name) {
         try {
@@ -91,6 +84,15 @@ public class ClientSide implements SocketListener {
     @Override
     public void messageArrived(String data) {
         analyzeServerCommands(data);
+    }
+    
+    // A test
+    public static void main(String[] args) throws InterruptedException {
+        ClientSide con = new ClientSide();
+        con.connect("", "");
+        Thread.sleep(1500);
+        System.out.println("Sending message");
+        con.sendMessage("Client test message");
     }
 
 }

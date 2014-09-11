@@ -1,53 +1,41 @@
 package clientSideTest;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import clientside.SocketClass;
+import clientside.SocketIF;
+import java.io.IOException;
 
 /**
  *
  * @author ThomasHedegaard
  */
 public class ClientTest {
-    
+
+    SocketIF con;
+
     public ClientTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        this.con = new SocketMock();
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-
-    @Test
-    public void connect(String msg, String name){
-        
+    public void connectToServer() throws IOException {
+        con.connect();
     }
 
+    public void closeConToServer() throws IOException {
+        con.close();
+    }
 
+    // Main
+    public static void main(String[] args) {
+        try {
+            ClientTest test = new ClientTest();
+            test.connectToServer();
+            System.out.println("Connected to server!");
+            test.closeConToServer();
+            System.out.println("Disconnected from server!");
+        } catch (IOException e) {
+            System.err.println("Error in server connection");
+            System.exit(1);
+        }
+
+    }
 }
