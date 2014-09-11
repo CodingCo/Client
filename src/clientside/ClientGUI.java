@@ -20,6 +20,10 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         model = new DefaultListModel();
         jListOnlineUsers.setModel(model);
 
+        // I added this ------------------------------------
+        client.registerObserver(this); //-------------------              <-- The register Business here!
+        // I added this ------------------------------------
+
         manageEnabledButtons();
     }
 
@@ -169,12 +173,13 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         UIManager.put("OptionPane.messageFont", new FontUIResource(
                 new Font("Tahoma", Font.BOLD, 18)));
         input = JOptionPane.showInputDialog(message);
-        if (input == null)
+        if (input == null) {
             return "";
-        else if (!input.isEmpty())
+        } else if (!input.isEmpty()) {
             return input;
-        else
+        } else {
             generateErrorMessage("Not valid input, please re-enter");
+        }
         return generateInputMessage(message);
     }
 
@@ -220,13 +225,15 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
 
     private void jButtonConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConnectActionPerformed
         String name = generateInputMessage("Type your name and press OK");
-        if (!name.isEmpty())
+        if (!name.isEmpty()) {
             client.connect("CONNECT#" + name, name);
+        }
         manageEnabledButtons();
     }//GEN-LAST:event_jButtonConnectActionPerformed
 
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
-        client.closeConnection();
+        // client.closeConnection(); ----- CHANGE 
+        client.sendMessage("CLOSE#");
         manageEnabledButtons();
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
@@ -236,10 +243,11 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
             String message = jTextAreaMessageInput.getText();
             client.sendMessage(message);
         }
-        if (!jTextAreaMessageInput.getText().isEmpty())
+        if (!jTextAreaMessageInput.getText().isEmpty()) {
             jButtonSend.setEnabled(true);
-        else
+        } else {
             jButtonSend.setEnabled(false);
+        }
     }//GEN-LAST:event_jTextAreaMessageInputKeyTyped
 
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
@@ -261,7 +269,7 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
     }
 
     private void updateOnlineUsersList(String message) {
-        int sharps = 0;                                                           
+        int sharps = 0;
         String userString = "";
         for (Character character : message.toCharArray()) {                       //== "CUTS" "ONLINE#" AWAY. ALLOWS "#" IN USERNAMES
             if (sharps >= 1) {
@@ -274,12 +282,14 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
 
         String[] names = userString.split(",");                                   //== SEPARATES ALL THE USERS
         ArrayList<User> onlineUsers = new ArrayList<>();
-        for (String name : names)
+        for (String name : names) {
             onlineUsers.add(new User(name));
+        }
 
         model.clear();                                                            //== CLEARS AND REFILLS THE LIST
-        for (User user : onlineUsers)
+        for (User user : onlineUsers) {
             model.addElement(user);
+        }
     }
 
     @Override
@@ -288,6 +298,9 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
             jTextAreaChatBox.append("\n" + obtainMessage(message));
         } else if (message.startsWith("ONLINE#")) {                               //== WHEN A "ONLINE#" COMMAND HAS ARRIVED
             updateOnlineUsersList(message);
+        } else if (message.equals("Connection closed.")) {
+            jTextAreaChatBox.append("\n" + message);
+            manageEnabledButtons();
         } else {                                                                  //== ELSE, IT IS A CLOSE-MESSAGE 
             jTextAreaChatBox.append("\n" + message);
         }

@@ -20,6 +20,7 @@ public class ClientSide implements SocketListener {
         this.con = new SocketClass();
         this.observers = new ArrayList<>();
         setConnected(false);
+        con.registerListeners(this);
     }
 
     //Methods
@@ -27,6 +28,7 @@ public class ClientSide implements SocketListener {
         try {
             con.connect();
             sendMessage(msg);
+            setConnected(true);
             this.userName = name;
         } catch (IOException ex) {
         }
@@ -37,7 +39,7 @@ public class ClientSide implements SocketListener {
     }
 
     public void analyzeServerCommands(String cmd) {
-
+        System.out.println("How many observers in ClientSide: " + observers.size()); // Temp
         if (cmd.equals("CLOSE#")) {
             setConnected(false);
             closeConnection();
@@ -54,6 +56,7 @@ public class ClientSide implements SocketListener {
         try {
             con.close();
             notifyObservers("Connection closed.");
+            setConnected(false);
         } catch (IOException ex) {
         }
     }
@@ -62,7 +65,7 @@ public class ClientSide implements SocketListener {
         return connected;
     }
 
-    private void setConnected(boolean status) {
+    public void setConnected(boolean status) {
         connected = status;
     }
 
@@ -84,15 +87,6 @@ public class ClientSide implements SocketListener {
     @Override
     public void messageArrived(String data) {
         analyzeServerCommands(data);
-    }
-    
-    // A test
-    public static void main(String[] args) throws InterruptedException {
-        ClientSide con = new ClientSide();
-        con.connect("", "");
-        Thread.sleep(1500);
-        System.out.println("Sending message");
-        con.sendMessage("Client test message");
     }
 
 }

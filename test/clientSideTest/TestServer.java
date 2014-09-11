@@ -25,14 +25,14 @@ public class TestServer {
     // Main
     public static void main(String[] args) {
         try {
-            ServerSocket listen = new ServerSocket(7070, 10, InetAddress.getLoopbackAddress());
+            ServerSocket listen = new ServerSocket(8014, 10, InetAddress.getLoopbackAddress());
             System.out.println("Server started on: " + listen.getInetAddress() + "\n"
                     + "Listening on port: " + listen.getLocalPort());
 
             while (keepRunning) {
                 System.out.println("\n\nWaiting for client!");
                 Socket client = listen.accept();
-                System.out.println("Cleint connected!");
+                System.out.println("Client connected!");
                 new Thread(new clientHandler(client)).start();
 
             }
@@ -54,15 +54,16 @@ public class TestServer {
         public void run() {
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                PrintWriter out = new PrintWriter(client.getOutputStream());
+                PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 
                 while (true) {
                     String response = in.readLine();
                     System.out.println("Message from client: " + response);
-                    out.println(response);
+                    Thread.sleep(4000);
+                    out.println("ONLINE#Lars,Ole,Peter");
                 }
 
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
             }
         }
 

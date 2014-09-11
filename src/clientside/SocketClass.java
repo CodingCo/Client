@@ -1,5 +1,6 @@
 package clientside;
 
+import Utility.Utility;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,9 +20,15 @@ public class SocketClass implements Runnable, SocketIF {
     private PrintWriter out;
     private ArrayList<SocketListener> listeners;
     private boolean keepListening;
+    private final String ipAddress;
+    private final int port;
+    private Properties property = Utility.initProperties("serverproperties.txt");
 
     // Constructor
     public SocketClass() {
+        this.listeners = new ArrayList();
+        ipAddress = property.getProperty("ipaddress");
+        port = Integer.parseInt(property.getProperty("port"));
     }
 
     // Methods
@@ -37,14 +44,17 @@ public class SocketClass implements Runnable, SocketIF {
 
     @Override
     public void connect() throws IOException {
-        this.socket = new Socket(InetAddress.getLoopbackAddress(), 7070);
+        this.socket = new Socket(ipAddress, port);
+        System.out.println("Connecting to: " + socket.getRemoteSocketAddress()); // Temp
         openResources();
+        keepListening = true;
         new Thread(this).start();
     }
 
     @Override
     public void send(String data) {
-        out.println(data); 
+        System.out.println("Message to server: " + data);
+        out.println(data);
     }
 
     @Override
@@ -56,6 +66,7 @@ public class SocketClass implements Runnable, SocketIF {
 
     @Override
     public void notifyListeners(String data) {
+        System.out.println("How many listeners in socketclass: " + listeners.size()); // Temp
         for (SocketListener listener : listeners) {
             listener.messageArrived(data);
         }
@@ -74,11 +85,12 @@ public class SocketClass implements Runnable, SocketIF {
     // Listens for input
     @Override
     public void run() {
-        String response;
+        String response = "";
+
         try {
             while (keepListening) {
                 response = in.readLine();
-                System.out.println("Message arrived!");
+                System.out.println("Did I ever recieve anything? : " + response); // Temp
                 notifyListeners(response);
             }
         } catch (IOException e) {
