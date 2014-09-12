@@ -301,6 +301,7 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
             command += "*#" + message;
         } else if (jListOnlineUsers.getSelectedIndices().length == 1) {           //== Sending to one user
             command += jListOnlineUsers.getSelectedValue() + "#" + message;
+            jTextAreaChatBox.append("\n" + message);
         } else {                                                                   //== Sending to a group of users
             int index = 0;
             for (Object user : jListOnlineUsers.getSelectedValuesList()) {
@@ -311,6 +312,7 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
                 index++;
             }
             command += "#" + message;
+            jTextAreaChatBox.append("\n" + message);
         }
         return command;
     }
