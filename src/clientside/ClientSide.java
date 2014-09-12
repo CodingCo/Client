@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Awesomeness
+ * @author ThomasHedegaard
  */
 public class ClientSide implements SocketListener {
 
@@ -15,10 +15,12 @@ public class ClientSide implements SocketListener {
     private SocketIF con;
     private ArrayList<ViewListener> observers;
     private boolean connected;
+    private int connectionAttemps;
 
     public ClientSide() {
         this.con = new SocketClass();
         this.observers = new ArrayList<>();
+        this.connectionAttemps = 0;
         setConnected(false);
         con.registerListeners(this);
     }
@@ -39,11 +41,16 @@ public class ClientSide implements SocketListener {
     }
 
     public void analyzeServerCommands(String cmd) {
-        System.out.println("How many observers in ClientSide: " + observers.size()); // Temp
         if (cmd.equals("CLOSE#")) {
             setConnected(false);
             closeConnection();
         } else if (cmd.startsWith("ONLINE#")) {
+
+            if (connectionAttemps == 0) {
+                notifyObservers("You are now connected!");
+                ++connectionAttemps;
+            }
+
             setConnected(true);
             notifyObservers(cmd);
         } else if (cmd.startsWith("MESSAGE#")) {
@@ -57,6 +64,7 @@ public class ClientSide implements SocketListener {
             con.close();
             notifyObservers("Connection closed.");
             setConnected(false);
+            connectionAttemps = 0;
         } catch (IOException ex) {
         }
     }
@@ -80,7 +88,7 @@ public class ClientSide implements SocketListener {
 
     public void notifyObservers(String msg) {
         for (ViewListener obs : observers) {
-            obs.messageArrived(msg); // <- String
+            obs.messageArrived(msg); 
         }
     }
 

@@ -25,7 +25,7 @@ public class TestServer {
     // Main
     public static void main(String[] args) {
         try {
-            ServerSocket listen = new ServerSocket(8014, 10, InetAddress.getLoopbackAddress());
+            ServerSocket listen = new ServerSocket(57807, 10, InetAddress.getLoopbackAddress());
             System.out.println("Server started on: " + listen.getInetAddress() + "\n"
                     + "Listening on port: " + listen.getLocalPort());
 
@@ -59,7 +59,7 @@ public class TestServer {
                 while (true) {
                     String response = in.readLine();
                     System.out.println("Message from client: " + response);
-                    Thread.sleep(3000);
+                    Thread.sleep(4000);
                     out.println("ONLINE#Lars,Ole,Peter");
                 }
 

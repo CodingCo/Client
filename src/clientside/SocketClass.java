@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  *
- * @author Awesomeness
+ * @author ThomasHedegaard
  */
 public class SocketClass implements Runnable, SocketIF {
 
@@ -22,7 +22,7 @@ public class SocketClass implements Runnable, SocketIF {
     private boolean keepListening;
     private final String ipAddress;
     private final int port;
-    private Properties property = Utility.initProperties("serverproperties.txt");
+    private Properties property = Utility.initProperties("properties.txt");
 
     // Constructor
     public SocketClass() {
@@ -45,7 +45,6 @@ public class SocketClass implements Runnable, SocketIF {
     @Override
     public void connect() throws IOException {
         this.socket = new Socket(ipAddress, port);
-        System.out.println("Connecting to: " + socket.getRemoteSocketAddress()); // Temp
         openResources();
         keepListening = true;
         new Thread(this).start();
@@ -53,7 +52,6 @@ public class SocketClass implements Runnable, SocketIF {
 
     @Override
     public void send(String data) {
-        System.out.println("Message to server: " + data);
         out.println(data);
     }
 
@@ -66,7 +64,6 @@ public class SocketClass implements Runnable, SocketIF {
 
     @Override
     public void notifyListeners(String data) {
-        System.out.println("How many listeners in socketclass: " + listeners.size()); // Temp
         for (SocketListener listener : listeners) {
             listener.messageArrived(data);
         }
@@ -89,9 +86,14 @@ public class SocketClass implements Runnable, SocketIF {
 
         try {
             while (keepListening) {
-                System.out.println("I'm in the listening thread.");
                 response = in.readLine();
-                System.out.println("Message from server : " + response); // Temp
+                
+                if(response == null){  // If gracefull shutdown didn't happen
+                    notifyListeners("CLOSE#");
+                    keepListening = false;
+                    break;
+                }
+                
                 notifyListeners(response);
             }
         } catch (IOException e) {

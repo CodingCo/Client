@@ -20,7 +20,7 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         model = new DefaultListModel();
         jListOnlineUsers.setModel(model);
 
-        client.registerObserver(this); 
+        client.registerObserver(this);
 
         manageEnabledButtons();
     }
@@ -381,7 +381,7 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         for (User user : onlineUsers) {
             model.addElement(user);
         }
-        
+
         jLabel1.setText("Online users: " + onlineUsers.size());
     }
 
@@ -394,6 +394,8 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         } else if (message.equals("Connection closed.")) {
             jTextAreaChatBox.append("\n" + message);
             manageEnabledButtons();
+        } else if (message.equals("You are now connected!")) {
+            jTextAreaChatBox.setText(message);
         } else {                                                                  //== ELSE, IT IS A CLOSE-MESSAGE 
             jTextAreaChatBox.append("\n" + message);
         }
