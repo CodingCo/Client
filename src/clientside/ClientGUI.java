@@ -56,6 +56,11 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CodeBusters' New Masterpiece");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
         jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -355,6 +360,10 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
         jListOnlineUsers.clearSelection();
     }//GEN-LAST:event_jPanel1MouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        client.sendMessage("CLOSE#");
+    }//GEN-LAST:event_formWindowClosing
 
     private String obtainMessage(String message) {
         int sharps = 0;
