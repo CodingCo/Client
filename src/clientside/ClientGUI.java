@@ -1,7 +1,10 @@
 package clientside;
 
 import java.awt.Font;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -282,12 +285,18 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         jButtonConnect.setEnabled(!client.isConnected());
         jButtonClose.setEnabled(client.isConnected());
     }
+    //== Creates timestamp 
+        private String getTimeStamp(){
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        Calendar currentDate = new GregorianCalendar();
+        return " " + sdf.format(currentDate.getTime()) + " - ";
+    }
 
     //== Commands from the client to the server (CONNECT#NAME)(SEND#NAME#MESSAGE)(CLOSE#)
     private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
         if (!jTextAreaMessageInput.getText().isEmpty()) {
             String message = jTextAreaMessageInput.getText();
-            client.sendMessage(generateSendCommand(message));
+            client.sendMessage(generateSendCommand(getTimeStamp() + message));
             jTextAreaMessageInput.setText("");
             jListOnlineUsers.clearSelection();
         } else {
