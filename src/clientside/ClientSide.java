@@ -76,6 +76,10 @@ public class ClientSide implements SocketListener {
     public void setConnected(boolean status) {
         connected = status;
     }
+    
+    public String getUserName(){
+        return this.userName;
+    }
 
     // Observer pattern solutions
     public void registerObserver(ViewListener obs) {

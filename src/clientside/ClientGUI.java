@@ -285,11 +285,11 @@ public class ClientGUI extends javax.swing.JFrame implements ViewListener {
         jButtonConnect.setEnabled(!client.isConnected());
         jButtonClose.setEnabled(client.isConnected());
     }
-    //== Creates timestamp 
+    //== Creates timestamp and username 
         private String getTimeStamp(){
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Calendar currentDate = new GregorianCalendar();
-        return " " + sdf.format(currentDate.getTime()) + " - ";
+        return " " + sdf.format(currentDate.getTime()) + "/ " + client.getUserName() + ": "; 
     }
 
     //== Commands from the client to the server (CONNECT#NAME)(SEND#NAME#MESSAGE)(CLOSE#)
